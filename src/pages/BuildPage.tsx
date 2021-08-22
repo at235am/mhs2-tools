@@ -1,27 +1,38 @@
 // styling:
-import { css, jsx, Theme, useTheme } from "@emotion/react";
+import { css, jsx } from "@emotion/react";
 import styled from "@emotion/styled";
 import { rgba } from "emotion-rgba";
 
+// library:
 import { Link, match } from "react-router-dom";
-import React, { useEffect, useMemo, useState, useRef, memo } from "react";
+import { useEffect, useMemo, useState, useRef, memo, useCallback } from "react";
 import { useHistory } from "react-router-dom";
-
+import { motion } from "framer-motion";
 import debounce from "lodash/debounce";
 
 //hooks:
 import useDrop from "../hooks/useDrop";
+import { useUIState } from "../contexts/UIContext";
+import { useAuth } from "../contexts/AuthContext";
 
 // custom component:
 import BingoBoard from "../components/BingoBoard";
 import GeneSearch from "../components/GeneSearch";
 import FloatingPoint from "../components/FloatingPoint";
+import TextInput from "../components/TextInput";
+import BingoBonuses from "../components/BingoBonuses";
+import ObtainableGeneList from "../components/ObtainableGeneList";
+import SkillsList from "../components/SkillsList";
+import Gutter from "../components/Gutter";
+import BuildPageNotification from "../components/BuildPageNotification";
+import MonsterSelect from "../components/build-page-header-components/MonsterSelect";
 
-import { useUIState } from "../contexts/UIContext";
-import { GeneSkill, Skill } from "../utils/ProjectTypes";
-import MonstieGeneBuild, { GeneBuild } from "../components/MonstieGeneBuild";
+// types:
+import { GeneSkill } from "../utils/ProjectTypes";
+import { GeneBuild } from "../components/MonstieGeneBuild";
+
+// utils:
 import {
-  BLANK_GENE,
   cleanGeneBuild,
   CLEAN_EMPTY_BOARD,
   decodeBase64UrlToGeneBuild,
@@ -29,37 +40,20 @@ import {
   encodeGeneBuildToBase64Url,
   shuffleArray,
 } from "../utils/utils";
-import useGeneBuild from "../hooks/useGeneBuild";
-import TextInput from "../components/TextInput";
-import { rainbowGradient } from "../components/GeneSlot";
 import { ELEMENT_COLOR as EC } from "../utils/ProjectTypes";
-import BingoBonuses from "../components/BingoBonuses";
-import ObtainableGeneList from "../components/ObtainableGeneList";
-import SkillsList from "../components/SkillsList";
-import Gutter from "../components/Gutter";
-import { useAuth } from "../contexts/AuthContext";
 import { GENE_BUILDS } from "../utils/LocalStorageKeys";
+
+// database:
 import { saveUserBuild } from "../utils/db-inserts";
 import supabase from "../utils/supabase";
 import { sanitizeGeneSkill } from "../utils/db-transforms";
-import { RiFundsFill } from "react-icons/ri";
-import DynamicPortal from "../components/DynamicPortal";
-import { MdClose, MdEdit } from "react-icons/md";
-import { motion } from "framer-motion";
-import BuildPageNotification from "../components/BuildPageNotification";
-import { useCallback } from "react";
-import MonsterSelect from "../components/MonsterSelect";
 
-export const rainbowTextGradient = (degree = 150) =>
-  `repeating-linear-gradient(
-    ${degree}deg,
-    ${EC["fire"].main} ,
-    ${EC["thunder"].main} ,
-    #49d0b0 ,
-    ${EC["water"].main} ,
-    ${EC["dragon"].main} ,
-    ${EC["fire"].main}
-)`;
+// icons:
+import { RiFundsFill } from "react-icons/ri";
+import { MdContentCopy, MdClose, MdEdit, MdShare } from "react-icons/md";
+import { User } from "@supabase/supabase-js";
+import ShareLink from "../components/build-page-header-components/ShareLink";
+import UserBuildInfo from "../components/build-page-header-components/UserBuildInfo";
 
 const Container = styled.div`
   /* border: 2px dashed green; */
@@ -92,11 +86,12 @@ const Container = styled.div`
 const HeaderContainer = styled.div`
   width: 100%;
 
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 2rem;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.s}px) {
-    flex-direction: column;
+  @media (max-width: ${({ theme }) => theme.breakpoints.s + 100}px) {
+    /* flex-direction: column; */
   }
 `;
 
@@ -133,25 +128,11 @@ const BoardSection = styled(Section)<{ size: number | undefined }>`
   max-width: ${({ size }) => size}px;
 `;
 
-const BingoSection = styled(Section)`
-  min-width: 20rem;
-  max-width: 25rem;
-`;
-
 const SkillsSection = styled(Section)`
-  /* overflow: auto; */
-
-  /* flex: 2; */
   min-width: 21.5rem;
-
-  /* min-width: 400px; */
-  /* max-width: 400px; */
 `;
 
-const ObtainablesSection = styled(Section)`
-  /* min-width: 300px; */
-  /* max-width: 400px; */
-`;
+const ObtainablesSection = styled(Section)``;
 
 const Heading = styled.h1`
   width: 100%;
@@ -159,18 +140,7 @@ const Heading = styled.h1`
   font-weight: 700;
   font-size: 3rem;
 
-  /* margin-bottom: 1rem; */
-
-  /* background: ${rainbowGradient()};
-  background-attachment: fixed;
-  background-clip: text;
-  -webkit-text-fill-color: transparent; */
-
-  /* -webkit-text-fill-color: */
-
   color: ${({ theme }) => theme.colors.onSurface.main};
-
-  /* display: flex; */
 `;
 
 const headingHeight = 2.2;
@@ -183,24 +153,6 @@ const subHeadingStyles = (props: any) => css`
   font-size: 2rem;
 
   margin-left: 0.25rem;
-`;
-
-const BuildNameInput = styled(TextInput)`
-  /* ${subHeadingStyles}
-  min-width: 300px;
-  max-width: 300px; */
-
-  font-weight: 700;
-  font-size: 3rem;
-
-  /* background: ${rainbowGradient()};
-  background-attachment: fixed;
-  background-clip: text;
-  -webkit-text-fill-color: transparent; */
-
-  &::placeholder {
-    color: inherit;
-  }
 `;
 
 const SubHeading = styled.h2`
@@ -231,32 +183,11 @@ const BackLink = styled(Link)`
   }
 `;
 
-const Button = styled.button`
-  flex: 1;
-
-  min-height: ${headingHeight}rem;
-  border-radius: 5rem;
-
-  background-color: ${({ theme }) => theme.colors.primary.main};
-
-  color: ${({ theme }) => theme.colors.onPrimary.main};
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const SaveButton = styled(Button)<{ isDirty: boolean }>`
-  ${({ isDirty, theme }) =>
-    isDirty
-      ? css`
-          background-color: ${theme.colors.error.main};
-        `
-      : css``}
-`;
+const SHARE_LINK_PREFIX = `${process.env.REACT_APP_DOMAIN}/builds/`;
+const getShareLink = (build: GeneBuild) => {
+  if (build.createdBy) return `${SHARE_LINK_PREFIX}${build.buildId}`;
+  else return `${SHARE_LINK_PREFIX}${encodeGeneBuildToBase64Url(build)}`;
+};
 
 type PageProps = {
   match: match<{ id: string }>;
@@ -267,11 +198,10 @@ export type BuildMetaInfo = {
   isCreator: boolean;
 };
 
-const BuildPage = memo(({ match }: PageProps) => {
+const BuildPage = ({ match }: PageProps) => {
   const { user } = useAuth();
   // STATE:
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isDirty, setIsDirty] = useState(false);
 
   // DATA STATE:
   const [geneBuild, setGeneBuild] = useState<GeneSkill[]>(CLEAN_EMPTY_BOARD);
@@ -295,6 +225,13 @@ const BuildPage = memo(({ match }: PageProps) => {
   // DERIVED STATE:
   const floatPointOffset = isMobile ? 10.5 : 28;
   const buildId = match.params.id;
+  const shareLink = getShareLink({
+    buildId,
+    buildName,
+    monstie,
+    geneBuild,
+    createdBy: user ? user.id : null,
+  });
 
   const shuffle = () => setGeneBuild((list) => shuffleArray([...list]));
   const clearBuild = () => setGeneBuild(CLEAN_EMPTY_BOARD);
@@ -330,8 +267,6 @@ const BuildPage = memo(({ match }: PageProps) => {
       const t = [...arr, newData];
 
       window.localStorage.setItem(GENE_BUILDS, JSON.stringify(t));
-
-      setIsDirty(false);
     }
   };
 
@@ -508,25 +443,20 @@ const BuildPage = memo(({ match }: PageProps) => {
       <Gutter>
         <Container ref={containerRef}>
           <BackLink to="/builds">&lt;- Back to your build list</BackLink>
+
           <HeaderContainer>
-            <BuildNameInput
-              value={buildName}
-              onChange={(e) => setBuildName(e.target.value)}
-              maxLength={40}
-              placeholder="Build name"
+            <UserBuildInfo
+              username={user ? user.id.slice(0, 10) : "Anonymous"}
+              buildName={buildName}
+              setBuildName={setBuildName}
               disabled={!buildMetaData.isCreator}
             />
             <MonsterSelect value={monstie} setValue={setMonstie} />
+            <ShareLink link={shareLink} />
           </HeaderContainer>
-          {/* <Heading>The Magene {"->"}</Heading> */}
 
           <SubContainer>
             <BoardSection size={boardSize}>
-              {/* <ButtonContainer>
-                <Button onClick={clearBuild}>Clear</Button>
-                <Button onClick={shuffle}>Random</Button>
-                <SaveButton isDirty={isDirty}>Save</SaveButton>
-              </ButtonContainer> */}
               <SubHeading>Bingoboard</SubHeading>
 
               <BingoBoard
@@ -570,6 +500,6 @@ const BuildPage = memo(({ match }: PageProps) => {
       </Gutter>
     </>
   );
-});
+};
 
 export default BuildPage;

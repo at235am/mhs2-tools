@@ -8,7 +8,6 @@ import { motion, AnimatePresence, AnimateSharedLayout } from "framer-motion";
 import { createElement, ReactElement, useEffect, useState } from "react";
 import { IconType } from "react-icons";
 import { Link, useLocation } from "react-router-dom";
-import { rainbowTextGradient } from "../pages/BuildPage";
 
 // icons:
 import { CgMenu } from "react-icons/cg";

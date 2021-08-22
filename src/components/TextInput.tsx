@@ -17,6 +17,7 @@ type TextInputProps = {
   maxLength?: number;
   disabled?: boolean;
   placeholder?: string;
+  spellCheck?: boolean;
 };
 
 const TextInput = ({
@@ -25,16 +26,21 @@ const TextInput = ({
   className,
   maxLength,
   disabled = false,
+  spellCheck = true,
   placeholder,
+
+  ...props
 }: TextInputProps) => {
   return (
     <Input
+      {...props}
       className={className}
       value={value}
       onChange={onChange}
       maxLength={maxLength}
       disabled={disabled}
       placeholder={placeholder}
+      spellCheck={spellCheck}
     />
   );
 };

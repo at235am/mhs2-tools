@@ -187,6 +187,20 @@ const TeamBuilderPage = () => {
               console.log(data);
               if (error) console.error(error);
             };
+
+            const fetchGeneAc = async () => {
+              const listOfGeneIds = [78, 74, 85, 95, 26];
+
+              const { data, error } = await supabase
+                .from("geneacquisition")
+                .select("*, geneData:genes(*), monsters(*)")
+                .in("g_id", listOfGeneIds);
+
+              console.log(data);
+              if (error) console.error(error);
+            };
+
+            fetchGeneAc();
           }}
         >
           Gene Builds

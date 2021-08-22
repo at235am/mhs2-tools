@@ -7,9 +7,9 @@ import Asset from "./AssetComponents";
 import { ReactComponent as LogoClipSvg } from "../assets/logo/n-logo-clippable.svg";
 
 import { rainbowGradient } from "./GeneSlot";
-import { rainbowTextGradient } from "../pages/BuildPage";
 import { motion, useTransform, useViewportScroll } from "framer-motion";
 import { useEffect } from "react";
+import { rainbowTextGradient } from "../utils/color";
 
 const Container = styled.div`
   position: relative;
