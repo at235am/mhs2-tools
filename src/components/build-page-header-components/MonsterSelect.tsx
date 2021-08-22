@@ -76,7 +76,7 @@ const ValueText = styled.p`
   justify-content: flex-start;
 `;
 
-const ValueImg = styled.img`
+const imgStyles = css`
   width: 5rem;
   height: 5rem;
   min-width: 5rem;
@@ -89,6 +89,14 @@ const ValueImg = styled.img`
   border-radius: 5px;
 
   image-rendering: pixelated;
+`;
+
+const Img = styled.img`
+  ${imgStyles}
+`;
+
+const EmptyImg = styled.div`
+  ${imgStyles}
 `;
 
 const IconButton = styled.span`
@@ -247,20 +255,6 @@ const OptionText = styled.p`
   align-items: center;
 `;
 
-const OptionImg = styled.img`
-  /* z-index: 0; */
-  /* position: relative; */
-
-  width: 5rem;
-  height: 5rem;
-
-  padding: 0.5rem;
-
-  border-radius: 5px;
-
-  image-rendering: pixelated;
-`;
-
 const ExitButton = styled.button`
   position: fixed;
   top: ${({ theme }) => theme.dimensions.mainNav.maxHeight}px;
@@ -316,6 +310,9 @@ const AutoFocusInput = ({ filter, setFilter }: InputProps) => {
     </FilterContainer>
   );
 };
+
+const IMG_URL_PREFIX = process.env.REACT_APP_MONSTER_IMAGE_BUCKET_URL;
+const getImageUrl = (imgUrl: string) => `${IMG_URL_PREFIX}/${imgUrl}`;
 
 type SelectOption = {
   mId: number;
@@ -393,43 +390,18 @@ const MonsterSelect = ({ value, setValue }: Props) => {
     fetchMonsters();
   }, []);
 
-  const [locationKeys, setLocationKeys] = useState([]);
-  const history = useHistory();
-
-  useEffect(() => {
-    return history.listen((location) => {
-      if (history.action === "PUSH") {
-        // setLocationKeys([location.key]);
-        console.log("push");
-      }
-
-      if (history.action === "POP") {
-        if (locationKeys[1] === location.key) {
-          console.log("pop forward");
-
-          // setLocationKeys(([_, ...keys]) => keys);
-
-          // Handle forward event
-        } else {
-          console.log("pop baclkward");
-
-          window.alert("hey");
-
-          // setLocationKeys((keys) => [location.key, ...keys]);
-
-          // Handle back event
-        }
-      }
-    });
-  }, [history]);
-
   return (
     <BPHTemplate titleLabel="Monstie">
       <Container>
         <ValueBox onClick={toggleDropdown}>
-          <ValueImg
-            src={`https://nvbiwqsofgmscfcufpfd.supabase.in/storage/v1/object/public/monster-img/${selectedMonster?.imgUrl}`}
-          />
+          {selectedMonster ? (
+            <Img
+              src={getImageUrl(selectedMonster?.imgUrl)}
+              alt={selectedMonster?.monsterName}
+            />
+          ) : (
+            <EmptyImg />
+          )}
           <ValueText>{selectedMonster?.monsterName}</ValueText>
 
           <IconButton>
@@ -476,9 +448,7 @@ const MonsterSelect = ({ value, setValue }: Props) => {
                       setFilter("");
                     }}
                   >
-                    <OptionImg
-                      src={`https://nvbiwqsofgmscfcufpfd.supabase.in/storage/v1/object/public/monster-img/${mon.imgUrl}`}
-                    />
+                    <Img src={getImageUrl(mon.imgUrl)} alt={mon.monsterName} />
                     <OptionText>{mon.monsterName}</OptionText>
                   </Option>
                 ))}

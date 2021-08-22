@@ -301,9 +301,18 @@ export const expandGeneBuild = async (
 
   if (data && !error) {
     geneBuild = cleanGeneBuild(
-      listOfGeneIds.map((g_id) =>
-        sanitizeGeneSkill(data.find((geneSkill) => geneSkill.g_id === g_id))
-      )
+      listOfGeneIds.map((g_id) => {
+        const geneSkill = data.find((gs) => gs.g_id === g_id);
+
+        return sanitizeGeneSkill(
+          geneSkill
+            ? {
+                ...geneSkill,
+                skill: geneSkill.skills[0],
+              }
+            : BLANK_GENE
+        );
+      })
     );
   } else if (error) {
     console.error(error);
@@ -316,13 +325,6 @@ export const expandGeneBuild = async (
     monstie: m,
     geneBuild,
   };
-  // return {
-  //   buildId: i,
-  //   buildName: b,
-  //   createdBy: c,
-  //   monstie: m,
-  //   geneBuild: CLEAN_EMPTY_BOARD,
-  // };
 };
 
 export const encodeGeneBuildToBase64Url = (build: GeneBuild) => {

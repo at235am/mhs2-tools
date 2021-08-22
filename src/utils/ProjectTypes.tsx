@@ -1,5 +1,3 @@
-import color from "color";
-
 export const ELEMENT_COLOR = {
   "non-elemental": {
     main: "#858585",
