@@ -56,6 +56,10 @@ const ValueBox = styled.button`
       filter: brightness(150%);
     }
   }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 `;
 
 const ValueText = styled.p`
@@ -329,9 +333,10 @@ type SelectOption = {
 type Props = {
   value: number;
   setValue: React.Dispatch<React.SetStateAction<number>>;
+  disabled?: boolean;
 };
 
-const MonsterSelect = ({ value, setValue }: Props) => {
+const MonsterSelect = ({ value, setValue, disabled = false }: Props) => {
   const [monsterList, setMonsterList] = useState<SelectOption[]>([]);
   const [filter, setFilter] = useState("");
   const [dropdown, setDropdown] = useState(false);
@@ -393,7 +398,7 @@ const MonsterSelect = ({ value, setValue }: Props) => {
   return (
     <BPHTemplate titleLabel="Monstie">
       <Container>
-        <ValueBox onClick={toggleDropdown}>
+        <ValueBox onClick={toggleDropdown} disabled={disabled}>
           {selectedMonster ? (
             <Img
               src={getImageUrl(selectedMonster?.imgUrl)}
@@ -404,9 +409,11 @@ const MonsterSelect = ({ value, setValue }: Props) => {
           )}
           <ValueText>{selectedMonster?.monsterName}</ValueText>
 
-          <IconButton>
-            <ArrowDownIcon />
-          </IconButton>
+          {!disabled && (
+            <IconButton>
+              <ArrowDownIcon />
+            </IconButton>
+          )}
         </ValueBox>
 
         {dropdown && (

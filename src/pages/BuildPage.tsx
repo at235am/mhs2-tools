@@ -54,6 +54,7 @@ import { MdContentCopy, MdClose, MdEdit, MdShare } from "react-icons/md";
 import { User } from "@supabase/supabase-js";
 import ShareLink from "../components/build-page-header-components/ShareLink";
 import UserBuildInfo from "../components/build-page-header-components/UserBuildInfo";
+import TextArea from "../components/TextArea";
 
 const Container = styled.div`
   /* border: 2px dashed green; */
@@ -71,15 +72,6 @@ const Container = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.s}px) {
     align-items: center;
-  }
-
-  &::after {
-    content: "";
-
-    /* background-color: #fff; */
-    width: 100%;
-    /* height: 100%; */
-    min-height: 20rem;
   }
 `;
 
@@ -207,6 +199,7 @@ const BuildPage = ({ match }: PageProps) => {
   const [geneBuild, setGeneBuild] = useState<GeneSkill[]>(CLEAN_EMPTY_BOARD);
   const [buildName, setBuildName] = useState("");
   const [monstie, setMonstie] = useState(DEFAULT_MONSTER.mId);
+  const [buildDescription, setBuildDescription] = useState("");
 
   // COMPONENT STATE:
   const [buildMetaData, setBuildMetaData] = useState<BuildMetaInfo>({
@@ -451,7 +444,11 @@ const BuildPage = ({ match }: PageProps) => {
               setBuildName={setBuildName}
               disabled={!buildMetaData.isCreator}
             />
-            <MonsterSelect value={monstie} setValue={setMonstie} />
+            <MonsterSelect
+              value={monstie}
+              setValue={setMonstie}
+              disabled={!buildMetaData.isCreator}
+            />
             <ShareLink link={shareLink} />
           </HeaderContainer>
 
@@ -482,6 +479,16 @@ const BuildPage = ({ match }: PageProps) => {
           <ObtainablesSection>
             <SubHeading>Hunt List</SubHeading>
             <ObtainableGeneList />
+          </ObtainablesSection>
+
+          <ObtainablesSection>
+            <SubHeading>Description</SubHeading>
+            <TextArea
+              value={buildDescription}
+              setValue={setBuildDescription}
+              maxLength={5000}
+              placeholder="Provide insight, strategies, and analysis to your build so that other users can have a deeper understanding of how to fully utilize it!"
+            />
           </ObtainablesSection>
 
           {buildMetaData.isCreator && (
