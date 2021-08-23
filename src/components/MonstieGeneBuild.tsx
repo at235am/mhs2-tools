@@ -79,6 +79,7 @@ export type GeneBuild = {
   monstie: number;
   createdBy: string | null;
   geneBuild: GeneSkill[];
+  insights: string;
 };
 
 type MonstieGeneBuildProps = { build: GeneBuild };

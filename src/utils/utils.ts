@@ -95,6 +95,7 @@ export const CORRUPTED_BUILD: GeneBuild = {
   monstie: 33,
   createdBy: "",
   geneBuild: CLEAN_EMPTY_BOARD,
+  insights: "",
 };
 
 export const randomNumber = (min: number, max: number) =>
@@ -319,11 +320,12 @@ export const expandGeneBuild = async (
   }
 
   return {
-    buildId: nanoid(),
+    buildId: nanoid(), // given a default value
     buildName: b,
-    createdBy: null,
+    createdBy: null, // given a default value
     monstie: m,
     geneBuild,
+    insights: "", // given a default value
   };
 };
 

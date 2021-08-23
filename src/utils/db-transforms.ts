@@ -11,6 +11,7 @@ export const createGeneBuild = (userId: string | null): GeneBuild => ({
   monstie: DEFAULT_MONSTER.mId,
   createdBy: userId,
   geneBuild: CLEAN_EMPTY_BOARD,
+  insights: "",
 });
 
 export type DB_BuildInfo = {
@@ -35,6 +36,7 @@ export const geneBuildToSqlTableFormat = (build: GeneBuild): DB_Build => {
     build_id: build.buildId,
     build_name: build.buildName,
     monstie: build.monstie,
+    insights: build.insights,
   };
 
   const buildPieces = [

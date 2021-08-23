@@ -8,6 +8,31 @@ import useResizeObserver from "use-resize-observer/polyfilled";
 
 const Container = styled.div`
   position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  &::before {
+    z-index: 10;
+    position: relative;
+    content: "";
+    top: 1px;
+    /* position: absolute; */
+    /* top: -2.8rem;
+    right: 0; */
+    background-color: ${({ theme }) => theme.colors.surface.main};
+    max-width: 2rem;
+    min-height: 2rem;
+
+    border-left: 2px solid ${({ theme }) => theme.colors.surface.darker};
+
+    clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+    clip-path: polygon(0 0, 0 100%, 100% 100%);
+
+    box-shadow: 2px -4px 0px 0px ${({ theme }) => theme.colors.surface.darker};
+    box-shadow: 2px -4px 0px 0px red;
+  }
 `;
 
 const TextAreaContainer = styled.textarea`
@@ -22,7 +47,13 @@ const TextAreaContainer = styled.textarea`
 
   color: ${({ theme }) => theme.colors.onSurface.main};
 
-  border-radius: 1rem;
+  border-radius: 5px;
+  border-top-left-radius: 0;
+  border: 2px solid ${({ theme }) => theme.colors.surface.darker};
+  border-top: none;
+
+  box-shadow: 2px -2px 0px 0px ${({ theme }) => theme.colors.surface.darker};
+  box-shadow: 0px -2px 0px 0px ${({ theme }) => theme.colors.surface.darker};
 
   background-color: ${({ theme }) => theme.colors.surface.main};
 
@@ -31,6 +62,10 @@ const TextAreaContainer = styled.textarea`
     color: ${({ theme }) => theme.colors.onSurface.main};
     opacity: 0.5;
     /* font-weight: 600; */
+  }
+
+  &:disabled {
+    cursor: text;
   }
 `;
 
@@ -47,6 +82,8 @@ const DummyMeasurementTA = styled(TextAreaContainer)`
 `;
 
 const CharCounter = styled.div`
+  z-index: 20;
+
   position: absolute;
   bottom: 0;
   right: 0;
@@ -64,6 +101,7 @@ type Props = {
   placeholder?: string;
   maxLength?: number;
   className?: string;
+  disabled?: boolean;
 };
 
 const TextArea = ({ value, setValue, maxLength = 10000, ...props }: Props) => {
@@ -78,8 +116,6 @@ const TextArea = ({ value, setValue, maxLength = 10000, ...props }: Props) => {
     if (textAreaRef.current && textMeasurementRef.current) {
       const textHeight = `${textMeasurementRef.current.scrollHeight}px`;
       textAreaRef.current.style.height = textHeight;
-
-      console.log(textHeight);
     }
   }, [value, width]);
 
@@ -92,7 +128,16 @@ const TextArea = ({ value, setValue, maxLength = 10000, ...props }: Props) => {
         onChange={handleChange}
         maxLength={maxLength}
       />
-      <DummyMeasurementTA ref={textMeasurementRef} value={value} readOnly />
+
+      {/* <label htmlFor="ignore">First name:</label> */}
+      <DummyMeasurementTA
+        id="ignore"
+        ref={textMeasurementRef}
+        value={value}
+        readOnly
+        placeholder="ignore"
+      />
+
       <CharCounter>
         {value.length}/{maxLength}
       </CharCounter>

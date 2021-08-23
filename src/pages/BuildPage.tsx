@@ -40,8 +40,8 @@ import {
   encodeGeneBuildToBase64Url,
   shuffleArray,
 } from "../utils/utils";
-import { ELEMENT_COLOR as EC } from "../utils/ProjectTypes";
 import { GENE_BUILDS } from "../utils/LocalStorageKeys";
+import { replaceNullOrUndefined as unnullify } from "../utils/utils";
 
 // database:
 import { saveUserBuild } from "../utils/db-inserts";
@@ -141,6 +141,7 @@ const subHeadingStyles = (props: any) => css`
   color: ${props.theme.colors.onSurface.main};
 
   min-height: ${headingHeight}rem;
+  max-height: ${headingHeight}rem;
   font-weight: 700;
   font-size: 2rem;
 
@@ -224,6 +225,7 @@ const BuildPage = ({ match }: PageProps) => {
     monstie,
     geneBuild,
     createdBy: user ? user.id : null,
+    insights: buildDescription,
   });
 
   const shuffle = () => setGeneBuild((list) => shuffleArray([...list]));
@@ -345,6 +347,7 @@ const BuildPage = ({ match }: PageProps) => {
             buildName: res.build_name,
             monstie: res.monstie,
             createdBy: res.creator_id,
+            insights: unnullify(res.insights, ""),
             geneBuild: cleanGeneBuild(
               res.buildpieces.map((bp: any) => {
                 return sanitizeGeneSkill({
@@ -357,6 +360,7 @@ const BuildPage = ({ match }: PageProps) => {
 
           setBuildName(build.buildName);
           setMonstie(build.monstie);
+          setBuildDescription(build.insights);
           setGeneBuild(build.geneBuild);
         }
 
@@ -371,6 +375,7 @@ const BuildPage = ({ match }: PageProps) => {
 
       setBuildName(localBuild?.buildName || "");
       setMonstie(localBuild?.monstie || 33);
+      setBuildDescription(localBuild?.insights || "");
       setGeneBuild(cleanGeneBuild(localBuild?.geneBuild || []));
 
       setLoading(false);
@@ -384,6 +389,7 @@ const BuildPage = ({ match }: PageProps) => {
 
         setBuildName(anonBuild.buildName);
         setMonstie(anonBuild.monstie);
+        setBuildDescription("");
         setGeneBuild(anonBuild.geneBuild);
 
         setLoading(false);
@@ -407,9 +413,18 @@ const BuildPage = ({ match }: PageProps) => {
         monstie,
         geneBuild,
         createdBy: user ? user.id : null,
+        insights: buildDescription,
       });
     }
-  }, [buildName, monstie, geneBuild, buildId, user, buildMetaData]);
+  }, [
+    buildName,
+    monstie,
+    geneBuild,
+    buildId,
+    buildDescription,
+    user,
+    buildMetaData,
+  ]);
 
   if (loading)
     return (
@@ -482,11 +497,12 @@ const BuildPage = ({ match }: PageProps) => {
           </ObtainablesSection>
 
           <ObtainablesSection>
-            <SubHeading>Description</SubHeading>
+            <SubHeading>Insights</SubHeading>
             <TextArea
               value={buildDescription}
               setValue={setBuildDescription}
               maxLength={5000}
+              disabled={!buildMetaData.isCreator}
               placeholder="Provide insight, strategies, and analysis to your build so that other users can have a deeper understanding of how to fully utilize it!"
             />
           </ObtainablesSection>

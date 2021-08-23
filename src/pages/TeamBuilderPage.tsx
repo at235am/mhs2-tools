@@ -132,6 +132,7 @@ const TeamBuilderPage = () => {
               buildName: build.build_name,
               monstie: build.monstie,
               createdBy: build.creator_id,
+              insights: build.insights,
               geneBuild: cleanGeneBuild(
                 build.buildpieces.map((bp: any) => {
                   return sanitizeGeneSkill({
