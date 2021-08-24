@@ -5,7 +5,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import { MdCheck, MdContentCopy } from "react-icons/md";
+import { ImCheckmark } from "react-icons/im";
 import BPHTemplate from "./BuildPageHeaderTemplate";
+import Tooltip from "../Tooltip";
 
 const ColumnGroup = styled.div`
   flex: 1;
@@ -70,17 +72,22 @@ const FlashCheck = styled(motion.div)`
   top: 0;
   right: 0;
 
-  margin: 0.75rem 1.5rem;
-  padding: 0 1rem;
+  margin: 0.5rem 1.5rem;
 
-  border-radius: 5px;
-  min-width: 50%;
+  padding-right: 0.3rem;
+  padding-left: 0.8rem;
+
+  border-radius: 5rem;
+  /* min-width: 5rem; */
+  width: min-content;
   min-height: 2rem;
 
   background-color: ${({ theme }) => theme.colors.correct.main};
+  /* color: ${({ theme }) => theme.colors.primary.darker}; */
+  color: rgba(0, 0, 0, 0.9);
 
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
 
   /* white-space: nowrap; */
   text-transform: uppercase;
@@ -90,6 +97,29 @@ const FlashCheck = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.5rem;
+
+  span {
+    width: 1.5rem;
+    height: 1.5rem;
+
+    border-radius: 50%;
+
+    background-color: ${({ theme }) => theme.colors.primary.darker};
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      width: 0.8rem;
+      height: 0.8rem;
+
+      path {
+        fill: rgba(0, 0, 0, 0.9);
+      }
+    }
+  }
 `;
 
 const flashAnimProps = {
@@ -124,7 +154,10 @@ const Flash = ({
 
   return (
     <FlashCheck {...flashAnimProps}>
-      Copied! <MdCheck />
+      Copied
+      <span>
+        <ImCheckmark />
+      </span>
     </FlashCheck>
   );
   // return <FlashCheck>Copied Successfully!</FlashCheck>;
@@ -152,7 +185,21 @@ const ShareLink = ({ link }: Props) => {
     }
   };
   return (
-    <BPHTemplate titleLabel="Share Link">
+    <BPHTemplate
+      titleLabel={
+        <>
+          Share Link{" "}
+          {
+            <Tooltip
+              text={`You are not logged in so this link changes whenever you make a change to the build. Your build insights will also not be shared.`}
+              label="Share Link Warning"
+              iconSize={18}
+              textBubbleWidth={300}
+            />
+          }
+        </>
+      }
+    >
       <>
         <AnimatePresence>
           {show && <Flash show={show} setShow={setShow} />}

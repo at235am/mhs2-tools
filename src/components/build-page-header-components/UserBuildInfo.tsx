@@ -48,6 +48,7 @@ type Props = {
   setBuildName: React.Dispatch<React.SetStateAction<string>>;
   username: string;
   disabled: boolean;
+  onClick?: () => void;
 };
 
 const UserBuildInfo = ({
@@ -55,12 +56,13 @@ const UserBuildInfo = ({
   setBuildName,
   username,
   disabled = false,
+  onClick,
 }: Props) => {
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBuildName(event.target.value);
   };
   return (
-    <BPHTemplate titleLabel="Build">
+    <BPHTemplate titleLabel="Build" onClick={onClick}>
       <BuildNameInput
         value={buildName}
         onChange={onChange}

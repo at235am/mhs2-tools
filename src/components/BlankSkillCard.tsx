@@ -7,6 +7,28 @@ import { isBlankGene } from "../utils/utils";
 import Asset from "./AssetComponents";
 import color from "color";
 
+import { MdAdd } from "react-icons/md";
+
+const Container2 = styled.div`
+  min-height: 12rem;
+  border-radius: 1rem;
+
+  border: 2px solid ${({ theme }) => theme.colors.surface.main};
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    width: 2rem;
+    height: 2rem;
+
+    path {
+      fill: ${({ theme }) => theme.colors.surface.main};
+    }
+  }
+`;
+
 const Container = styled.div`
   min-height: 12rem;
   border-radius: 1rem;
@@ -40,9 +62,18 @@ const Bubble = styled.h5<{ w?: string; bg?: string }>`
     theme.name === "dark" ? "#4b5561" : "#dadadc"};
 `;
 
-type BlankSkillCardProps = {};
+type BlankSkillCardProps = {
+  version?: "blank" | "dotted";
+};
 
-const BlankSkillCard = ({}: BlankSkillCardProps) => {
+const BlankSkillCard = ({ version = "dotted" }: BlankSkillCardProps) => {
+  if (version === "dotted")
+    return (
+      <Container2>
+        <MdAdd />
+      </Container2>
+    );
+
   return (
     <Container>
       <Bubble w="10rem" />

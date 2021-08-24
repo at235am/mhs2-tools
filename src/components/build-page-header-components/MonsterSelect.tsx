@@ -334,9 +334,15 @@ type Props = {
   value: number;
   setValue: React.Dispatch<React.SetStateAction<number>>;
   disabled?: boolean;
+  onClick?: () => void;
 };
 
-const MonsterSelect = ({ value, setValue, disabled = false }: Props) => {
+const MonsterSelect = ({
+  value,
+  setValue,
+  disabled = false,
+  onClick,
+}: Props) => {
   const [monsterList, setMonsterList] = useState<SelectOption[]>([]);
   const [filter, setFilter] = useState("");
   const [dropdown, setDropdown] = useState(false);
@@ -396,7 +402,7 @@ const MonsterSelect = ({ value, setValue, disabled = false }: Props) => {
   }, []);
 
   return (
-    <BPHTemplate titleLabel="Monstie">
+    <BPHTemplate titleLabel="Monstie" onClick={onClick}>
       <Container>
         <ValueBox onClick={toggleDropdown} disabled={disabled}>
           {selectedMonster ? (

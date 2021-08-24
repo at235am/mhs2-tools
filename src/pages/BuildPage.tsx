@@ -55,6 +55,9 @@ import { User } from "@supabase/supabase-js";
 import ShareLink from "../components/build-page-header-components/ShareLink";
 import UserBuildInfo from "../components/build-page-header-components/UserBuildInfo";
 import TextArea from "../components/TextArea";
+import useResizeObserver from "use-resize-observer/polyfilled";
+import Debug from "../components/Debug";
+import Tooltip from "../components/Tooltip";
 
 const Container = styled.div`
   /* border: 2px dashed green; */
@@ -76,38 +79,55 @@ const Container = styled.div`
 `;
 
 const HeaderContainer = styled.div`
+  /* border: 1px dashed; */
   width: 100%;
 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
   gap: 2rem;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.s + 100}px) {
-    /* flex-direction: column; */
-  }
 `;
 
-const SubContainer = styled.div`
+const oneColumn = css`
   display: flex;
+  flex-direction: column;
+`;
 
+const twoColumn = css`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(20rem, 1fr));
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "board bonus"
+    "skills hunt"
+    "insights  insights";
+`;
+
+const threeColumn = css`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(20rem, 1fr));
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "board bonus skills"
+    "hunt  hunt  skills"
+    "insights  insights  insights";
+`;
+
+const BodyContainer = styled.div<{ columns: number }>`
+  /* border: 1px dashed; */
   width: 100%;
+  gap: 2rem;
 
-  flex-wrap: wrap;
-
-  min-height: 400px;
-
-  gap: 3rem;
-  /* justify-content: space-between; */
+  ${({ columns }) => {
+    if (columns === 1) return oneColumn;
+    else if (columns === 2) return twoColumn;
+    else return threeColumn;
+  }}
 `;
 
 const Section = styled.section`
   /* border: 1px dashed red; */
 
-  flex: 1;
-
   width: 100%;
-
-  min-width: 200px;
 
   display: flex;
   flex-direction: column;
@@ -115,16 +135,29 @@ const Section = styled.section`
   gap: 1rem;
 `;
 
-const BoardSection = styled(Section)<{ size: number | undefined }>`
-  min-width: ${({ size }) => (size ? size : 300)}px;
-  max-width: ${({ size }) => size}px;
+const BoardSection = styled(Section)`
+  grid-area: board;
+  /* border: 1px dashed red; */
 `;
 
 const SkillsSection = styled(Section)`
-  min-width: 21.5rem;
+  grid-area: skills;
+  /* border: 1px dashed blue; */
 `;
 
-const ObtainablesSection = styled(Section)``;
+const BonusSection = styled(Section)`
+  grid-area: bonus;
+  /* border: 1px dashed orange; */
+`;
+
+const HuntListSection = styled(Section)`
+  grid-area: hunt;
+  /* border: 1px dashed yellow; */
+`;
+
+const InsightsSection = styled(Section)`
+  grid-area: insights;
+`;
 
 const Heading = styled.h1`
   width: 100%;
@@ -135,13 +168,13 @@ const Heading = styled.h1`
   color: ${({ theme }) => theme.colors.onSurface.main};
 `;
 
-const headingHeight = 2.2;
+const headingHeight = 2.5;
 
 const subHeadingStyles = (props: any) => css`
   color: ${props.theme.colors.onSurface.main};
 
-  min-height: ${headingHeight}rem;
-  max-height: ${headingHeight}rem;
+  /* min-height: ${headingHeight}rem; */
+  /* max-height: ${headingHeight}rem; */
   font-weight: 700;
   font-size: 2rem;
 
@@ -150,11 +183,10 @@ const subHeadingStyles = (props: any) => css`
 
 const SubHeading = styled.h2`
   ${subHeadingStyles}
-`;
 
-const ButtonContainer = styled.div`
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 const BackLink = styled(Link)`
@@ -194,7 +226,23 @@ export type BuildMetaInfo = {
 const BuildPage = ({ match }: PageProps) => {
   const { user } = useAuth();
   // STATE:
+  const [columns, setColumns] = useState(3);
+
   const containerRef = useRef<HTMLDivElement>(null);
+  const headerContainerRef = useRef<HTMLDivElement>(null);
+  const { width } = useResizeObserver({
+    ref: containerRef,
+    onResize: (_) => {
+      if (headerContainerRef.current) {
+        const t = window
+          .getComputedStyle(headerContainerRef.current)
+          .getPropertyValue("grid-template-columns")
+          .split(" ").length;
+
+        setColumns(t);
+      }
+    },
+  });
 
   // DATA STATE:
   const [geneBuild, setGeneBuild] = useState<GeneSkill[]>(CLEAN_EMPTY_BOARD);
@@ -209,12 +257,11 @@ const BuildPage = ({ match }: PageProps) => {
   });
 
   const [loading, setLoading] = useState(true);
+  const [showForkModal, setShowForkModal] = useState(false);
 
   const [dropSuccess, setDropSuccess] = useState(false);
   const { drop, setDrop } = useDrop();
   const { isMobile } = useUIState();
-
-  const boardSize = isMobile ? undefined : 400;
 
   // DERIVED STATE:
   const floatPointOffset = isMobile ? 10.5 : 28;
@@ -272,6 +319,17 @@ const BuildPage = ({ match }: PageProps) => {
   };
 
   const debouncedSave = useCallback(debounce(save, 1000), []);
+
+  useEffect(() => {
+    if (headerContainerRef.current) {
+      const t = window
+        .getComputedStyle(headerContainerRef.current)
+        .getPropertyValue("grid-template-columns")
+        .split(" ").length;
+
+      setColumns(t);
+    }
+  }, []);
 
   useEffect(() => {
     const buildId = match.params.id;
@@ -426,20 +484,6 @@ const BuildPage = ({ match }: PageProps) => {
     buildMetaData,
   ]);
 
-  if (loading)
-    return (
-      <Gutter>
-        <div>LOADING</div>
-      </Gutter>
-    );
-
-  if (buildMetaData.buildType === "invalid")
-    return (
-      <Gutter>
-        <div>invalid url</div>
-      </Gutter>
-    );
-
   return (
     <>
       <BuildPageNotification
@@ -450,74 +494,101 @@ const BuildPage = ({ match }: PageProps) => {
       />
       <Gutter>
         <Container ref={containerRef}>
-          <BackLink to="/builds">&lt;- Back to your build list</BackLink>
+          {showForkModal && <div>FORK</div>}
 
-          <HeaderContainer>
-            <UserBuildInfo
-              username={user ? user.id.slice(0, 10) : "Anonymous"}
-              buildName={buildName}
-              setBuildName={setBuildName}
-              disabled={!buildMetaData.isCreator}
-            />
-            <MonsterSelect
-              value={monstie}
-              setValue={setMonstie}
-              disabled={!buildMetaData.isCreator}
-            />
-            <ShareLink link={shareLink} />
-          </HeaderContainer>
+          {loading && <div>loading</div>}
 
-          <SubContainer>
-            <BoardSection size={boardSize}>
-              <SubHeading>Bingoboard</SubHeading>
+          {buildMetaData.buildType === "invalid" && !loading && (
+            <div>invalid url</div>
+          )}
 
-              <BingoBoard
-                size={boardSize}
-                geneBuild={geneBuild}
-                setGeneBuild={setGeneBuild}
-                drop={drop}
-                setDrop={setDrop}
-                setDropSuccess={setDropSuccess}
-                disabled={!buildMetaData.isCreator}
-              />
+          {buildMetaData.buildType !== "invalid" && !loading && (
+            <>
+              <BackLink to="/builds">&lt;- Back to your build list</BackLink>
 
-              <SubHeading>Bonuses</SubHeading>
-              <BingoBonuses geneBuild={geneBuild} showBingosOnly={false} />
-            </BoardSection>
+              <HeaderContainer ref={headerContainerRef}>
+                <UserBuildInfo
+                  username={user ? user.id.slice(0, 10) : "Anonymous"}
+                  buildName={buildName}
+                  setBuildName={setBuildName}
+                  disabled={!buildMetaData.isCreator}
+                />
+                <MonsterSelect
+                  value={monstie}
+                  setValue={setMonstie}
+                  disabled={!buildMetaData.isCreator}
+                />
+                <ShareLink link={shareLink} />
+              </HeaderContainer>
 
-            <SkillsSection>
-              <SubHeading>Skills</SubHeading>
-              <SkillsList geneBuild={geneBuild} />
-            </SkillsSection>
-          </SubContainer>
+              <BodyContainer columns={columns}>
+                <BoardSection>
+                  <SubHeading>Bingoboard</SubHeading>
 
-          <ObtainablesSection>
-            <SubHeading>Hunt List</SubHeading>
-            <ObtainableGeneList />
-          </ObtainablesSection>
+                  <BingoBoard
+                    // size={boardSize}
+                    geneBuild={geneBuild}
+                    setGeneBuild={setGeneBuild}
+                    drop={drop}
+                    setDrop={setDrop}
+                    setDropSuccess={setDropSuccess}
+                    disabled={!buildMetaData.isCreator}
+                  />
+                </BoardSection>
 
-          <ObtainablesSection>
-            <SubHeading>Insights</SubHeading>
-            <TextArea
-              value={buildDescription}
-              setValue={setBuildDescription}
-              maxLength={5000}
-              disabled={!buildMetaData.isCreator}
-              placeholder="Provide insight, strategies, and analysis to your build so that other users can have a deeper understanding of how to fully utilize it!"
-            />
-          </ObtainablesSection>
+                <BonusSection>
+                  <SubHeading>Bonuses</SubHeading>
+                  <BingoBonuses geneBuild={geneBuild} showBingosOnly={false} />
+                </BonusSection>
 
-          {buildMetaData.isCreator && (
-            <FloatingPoint
-              parentContainerRef={containerRef}
-              bottom={floatPointOffset}
-            >
-              <GeneSearch
-                setDrop={setDrop}
-                setDropSuccess={setDropSuccess}
-                dropSuccess={dropSuccess}
-              />
-            </FloatingPoint>
+                <SkillsSection>
+                  <SubHeading>Skills</SubHeading>
+                  <SkillsList geneBuild={geneBuild} />
+                </SkillsSection>
+
+                <HuntListSection>
+                  <SubHeading>Hunt List</SubHeading>
+                  <ObtainableGeneList />
+                </HuntListSection>
+
+                <InsightsSection>
+                  <SubHeading>
+                    Insights
+                    {!user && (
+                      <Tooltip
+                        text="You are not logged in, so if you share your build, it won't have your insights!"
+                        label="Insight Warning"
+                        textBubbleWidth={200}
+                      />
+                    )}
+                  </SubHeading>
+                  <TextArea
+                    value={buildDescription}
+                    setValue={setBuildDescription}
+                    maxLength={5000}
+                    disabled={!buildMetaData.isCreator}
+                    placeholder="Provide insight, strategies, and analysis so that other users can have a deeper understanding of how to fully utilize your build!"
+                  />
+                </InsightsSection>
+              </BodyContainer>
+
+              {/* <SubContainer>
+                <BoardSection size={boardSize}></BoardSection>
+              </SubContainer> */}
+
+              {buildMetaData.isCreator && (
+                <FloatingPoint
+                  parentContainerRef={containerRef}
+                  bottom={floatPointOffset}
+                >
+                  <GeneSearch
+                    setDrop={setDrop}
+                    setDropSuccess={setDropSuccess}
+                    dropSuccess={dropSuccess}
+                  />
+                </FloatingPoint>
+              )}
+            </>
           )}
         </Container>
       </Gutter>

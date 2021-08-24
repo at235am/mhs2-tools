@@ -12,14 +12,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  &::before {
+  /* &::before {
     z-index: 10;
     position: relative;
     content: "";
     top: 1px;
-    /* position: absolute; */
-    /* top: -2.8rem;
-    right: 0; */
+
     background-color: ${({ theme }) => theme.colors.surface.main};
     max-width: 2rem;
     min-height: 2rem;
@@ -32,7 +30,7 @@ const Container = styled.div`
 
     box-shadow: 2px -4px 0px 0px ${({ theme }) => theme.colors.surface.darker};
     box-shadow: 2px -4px 0px 0px red;
-  }
+  } */
 `;
 
 const TextAreaContainer = styled.textarea`
@@ -48,16 +46,29 @@ const TextAreaContainer = styled.textarea`
   color: ${({ theme }) => theme.colors.onSurface.main};
 
   border-radius: 5px;
-  border-top-left-radius: 0;
-  border: 2px solid ${({ theme }) => theme.colors.surface.darker};
-  border-top: none;
-
-  box-shadow: 2px -2px 0px 0px ${({ theme }) => theme.colors.surface.darker};
-  box-shadow: 0px -2px 0px 0px ${({ theme }) => theme.colors.surface.darker};
+  border-radius: 1rem;
 
   background-color: ${({ theme }) => theme.colors.surface.main};
+  /* background-color: transparent; */
+
+  font-size: 1rem;
+  letter-spacing: 1px;
+
+  border: 1px solid ${({ theme }) => theme.colors.surface.darker};
+
+  /* border-top-left-radius: 0; */
+  /* border: 2px solid ${({ theme }) => theme.colors.surface.darker}; */
+  /* border-top: none; */
+
+  /* box-shadow: 2px -2px 0px 0px ${({ theme }) =>
+    theme.colors.surface.darker}; */
+  /* box-shadow: 0px -2px 0px 0px ${({ theme }) =>
+    theme.colors.surface.darker}; */
 
   &::placeholder {
+    font-size: 1rem;
+    font-weight: normal;
+
     font-style: italic;
     color: ${({ theme }) => theme.colors.onSurface.main};
     opacity: 0.5;

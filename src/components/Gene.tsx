@@ -220,7 +220,8 @@ const Gene = ({
           <GeneName
             c={darkenGeneColor}
             borderColor={borderColor}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (!disableSkillPreview) setShowSkill((v) => !v);
             }}
           >

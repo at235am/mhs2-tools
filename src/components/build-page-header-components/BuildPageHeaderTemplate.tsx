@@ -22,16 +22,21 @@ const HeaderLabel = styled.h2`
 
   font-size: 1rem;
   font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 type Props = {
-  titleLabel: string;
+  titleLabel: string | ReactElement;
   children: ReactElement | ReactElement[] | string | null;
+  onClick?: () => void;
 };
 
-const BPHTemplate = ({ children, titleLabel }: Props) => {
+const BPHTemplate = ({ children, titleLabel, onClick }: Props) => {
   return (
-    <HeaderItem>
+    <HeaderItem onClick={onClick}>
       <HeaderLabel>{titleLabel}</HeaderLabel>
       {children}
     </HeaderItem>
