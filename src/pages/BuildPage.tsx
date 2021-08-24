@@ -58,6 +58,7 @@ import TextArea from "../components/TextArea";
 import useResizeObserver from "use-resize-observer/polyfilled";
 import Debug from "../components/Debug";
 import Tooltip from "../components/Tooltip";
+import { nanoid } from "nanoid";
 
 const Container = styled.div`
   /* border: 2px dashed green; */
@@ -227,6 +228,7 @@ const BuildPage = ({ match }: PageProps) => {
   const { user } = useAuth();
   // STATE:
   const [columns, setColumns] = useState(3);
+  const history = useHistory();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const headerContainerRef = useRef<HTMLDivElement>(null);
@@ -290,12 +292,12 @@ const BuildPage = ({ match }: PageProps) => {
 
   const saveToLocalStorage = (newData: GeneBuild) => {
     const allLocalBuilds: GeneBuild[] | null = JSON.parse(
-      window.localStorage.getItem(GENE_BUILDS) || "null"
+      window.localStorage.getItem(GENE_BUILDS) || "[]"
     );
 
     if (allLocalBuilds) {
       const buildIndex = allLocalBuilds.findIndex(
-        (builds) => builds.buildId === buildId
+        (builds) => builds.buildId === newData.buildId
       );
 
       const arr =
@@ -312,10 +314,24 @@ const BuildPage = ({ match }: PageProps) => {
     }
   };
 
-  const save = (build: GeneBuild) => {
-    if (build.createdBy) {
-      saveUserBuild(build);
-    } else saveToLocalStorage(build);
+  const save = async (build: GeneBuild) => {
+    if (build.createdBy) await saveUserBuild(build);
+    else saveToLocalStorage(build);
+  };
+
+  const forkBuild = async () => {
+    const newId = nanoid();
+
+    await save({
+      buildId: newId, // give the forked build a new id
+      buildName: `[fork] ${buildName}`, // add forked to the beginning
+      monstie, // keep current monstie
+      geneBuild, // keep current gene configuration
+      createdBy: user ? user.id : null, // get id of requesting user
+      insights: buildDescription,
+    });
+
+    history.push(`/builds/${newId}`);
   };
 
   const debouncedSave = useCallback(debounce(save, 1000), []);
@@ -394,10 +410,6 @@ const BuildPage = ({ match }: PageProps) => {
 
         if (error) console.error(error);
 
-        if (data?.length === 0) {
-          // setLoading(false);
-        }
-
         if (data && data.length > 0) {
           const res = data[0];
           const build = {
@@ -430,7 +442,7 @@ const BuildPage = ({ match }: PageProps) => {
     ///////////////////////////////// LOCAL BUILD /////////////////////////////////
     else if (buildMetaData.buildType === "local") {
       const localBuild = findLocalBuild(buildId);
-
+      console.log("local build", localBuild);
       setBuildName(localBuild?.buildName || "");
       setMonstie(localBuild?.monstie || 33);
       setBuildDescription(localBuild?.insights || "");
@@ -486,14 +498,17 @@ const BuildPage = ({ match }: PageProps) => {
 
   return (
     <>
-      <BuildPageNotification
-        metaInfo={buildMetaData}
-        editButtonAction={() => {
-          console.log("yes");
-        }}
-      />
       <Gutter>
         <Container ref={containerRef}>
+          {!buildMetaData.isCreator && buildMetaData.buildType !== "invalid" && (
+            <BuildPageNotification
+              metaInfo={buildMetaData}
+              editButtonAction={() => {
+                console.log("yes");
+                forkBuild();
+              }}
+            />
+          )}
           {showForkModal && <div>FORK</div>}
 
           {loading && <div>loading</div>}

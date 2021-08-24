@@ -67,7 +67,7 @@ export const darkTheme: Theme = {
   colors: {
     // primary: ccs({ main: "#49d0b0" }),
     // primary: ccs({ main: "#2de9b7" }),
-    primary: ccs({ main: "#49d0b0" }),
+    primary: ccs({ main: "#49d0b0", darker: "#007258" }),
     secondary: ccs({ main: "#2dc3e9" }),
 
     background: ccs({ main: "#2e3035" }),
@@ -108,7 +108,7 @@ export const lightTheme: Theme = {
   colors: {
     // primary: ccs({ main: "#49d0b0", light: "#bbf3fb" }),
     // primary: ccs({ main: "#2de9b7", light: "#bbf3fb" }),
-    primary: ccs({ main: "#49d0b0", light: "#bbf3fb" }),
+    primary: ccs({ main: "#49d0b0", light: "#bbf3fb", darker: "#007258" }),
     secondary: ccs({ main: "#6c63ff" }),
 
     // background: ccs({ main: "#f6f8fc", dark: "#e9eef8", darker: "#f6f6f6" }),

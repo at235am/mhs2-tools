@@ -82,12 +82,14 @@ const FlashCheck = styled(motion.div)`
   width: min-content;
   min-height: 2rem;
 
-  background-color: ${({ theme }) => theme.colors.correct.main};
+  background-color: ${({ theme }) => theme.colors.primary.main};
   /* color: ${({ theme }) => theme.colors.primary.darker}; */
-  color: rgba(0, 0, 0, 0.9);
+  /* color: rgba(0, 0, 0, 0.9); */
+  color: ${({ theme }) => theme.colors.primary.darker};
 
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 700;
+  letter-spacing: 1px;
 
   /* white-space: nowrap; */
   text-transform: uppercase;
@@ -116,7 +118,9 @@ const FlashCheck = styled(motion.div)`
       height: 0.8rem;
 
       path {
-        fill: rgba(0, 0, 0, 0.9);
+        /* fill: rgba(0, 0, 0, 0.9); */
+        /* fill: white; */
+        fill: ${({ theme }) => theme.colors.primary.main};
       }
     }
   }
