@@ -112,19 +112,6 @@ const EditButton = styled.button`
 type Props = { metaInfo: BuildMetaInfo; editButtonAction: () => void };
 
 const BuildPageNotification = ({ metaInfo, editButtonAction }: Props) => {
-  const { isMobile } = useUIState();
-
-  // if (isMobile)
-  //   return (
-  //     <NotificationContainer>
-  //       <RiInformationFill />
-  //       <NotificationText>
-  //         You are viewing someone else's build.
-  //       </NotificationText>
-  //       <NotificationText>To edit, fork your own copy.</NotificationText>
-  //     </NotificationContainer>
-  //   );
-
   return (
     <NotificationContainer>
       <RiInformationFill />

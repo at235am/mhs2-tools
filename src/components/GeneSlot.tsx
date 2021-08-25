@@ -70,7 +70,7 @@ const SlotHole = styled.div<{ isOver: boolean }>`
   background-color: ${({ theme }) => theme.colors.surface.main};
 
   /* background-color: ${({ isOver, theme }) =>
-    isOver ? theme.colors.correct.main : theme.colors.background.main}; */
+    isOver ? theme.colors.success.main : theme.colors.background.main}; */
 
   /* border: 5px solid ${({ theme }) => theme.colors.background.main}; */
 

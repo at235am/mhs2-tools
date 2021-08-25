@@ -40,6 +40,7 @@ import supabase from "../utils/supabase";
 import Fuse from "fuse.js";
 import { isNullishCoalesce } from "typescript";
 import { cleanGeneBuild } from "../utils/utils";
+import { rgba } from "emotion-rgba";
 
 const DummyWidthMeasurementDiv = styled.div`
   width: 100%;
@@ -51,6 +52,8 @@ const Container = styled(motion.div)<{
   padding: number;
 }>`
   z-index: 1;
+
+  /* outline: 1px solid white; */
 
   position: absolute;
   bottom: 5rem;
@@ -66,7 +69,7 @@ const Container = styled(motion.div)<{
 
   /* opacity: 0.94; */
 
-  max-height: ${({ height }) => height}px;
+  /* max-height: ${({ height }) => height}px; */
 
   display: flex;
   flex-direction: column;
@@ -91,20 +94,25 @@ const Container = styled(motion.div)<{
 
     border-radius: 1rem;
 
-    opacity: 0.94;
+    /* opacity: 0.94; */
+    backdrop-filter: blur(2px);
 
-    background-color: ${({ theme }) => theme.colors.surface.main};
+    /* background-color: ${({ theme }) => theme.colors.surface.main}; */
+    background-color: ${({ theme }) =>
+      rgba(theme.colors.background.darker, 0.94)};
   }
 `;
 
 const ResultInfo = styled.div`
+  /* border: 1px dashed green; */
+
   z-index: 100;
 
   position: relative;
 
-  height: 2rem;
-  min-height: 2rem;
-  max-height: 2rem;
+  height: 2.5rem;
+  min-height: 2.5rem;
+  max-height: 2.5rem;
   /* background-color: ${({ theme }) => theme.colors.background.main}; */
 
   /* margin: 0 1rem; */
@@ -120,11 +128,16 @@ const ResultInfo = styled.div`
 const PageInfo = styled.p`
   border-radius: 5rem;
   height: 100%;
+
   background-color: ${({ theme }) => theme.colors.background.main};
+  background-color: ${({ theme }) => theme.colors.onSurface.dark};
 
+  color: ${({ theme }) => theme.colors.background.darker};
   padding: 0 0.75rem;
-
   font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+
   /* font-weight: 600; */
 
   display: flex;
@@ -132,13 +145,16 @@ const PageInfo = styled.p`
   align-items: center;
 
   span {
-    margin-right: 0.5rem;
+    margin-right: 0.4rem;
     font-size: 0.9rem;
     font-weight: 600;
+    color: inherit;
   }
 `;
 
 const Results = styled(motion.div)`
+  /* border: 1px dashed red; */
+
   z-index: 100;
 
   position: relative;
@@ -194,7 +210,7 @@ const Controls = styled.div`
 
     /* margin: 0 5px; */
     /* background-color: ${({ theme }) => theme.colors.onSurface.main}; */
-    color: ${({ theme }) => theme.colors.error.darker};
+    color: ${({ theme }) => theme.colors.danger.darker};
     font-weight: 600;
 
     display: flex;
@@ -207,7 +223,7 @@ const LB = styled(motion.button)<{ size?: number }>`
   width: 2.5rem;
   height: 2.5rem;
 
-  margin-left: 0.5rem;
+  /* margin-left: 0.5rem; */
 
   border-radius: 50%;
 
@@ -232,38 +248,6 @@ const LB = styled(motion.button)<{ size?: number }>`
 
     path {
       fill: ${({ theme }) => theme.colors.surface.main};
-    }
-  }
-`;
-
-const FAB2 = styled(motion.button)`
-  z-index: 50;
-
-  position: absolute;
-  bottom: 0;
-  right: 0;
-
-  border-radius: 50%;
-  width: 4rem;
-  height: 4rem;
-
-  background-color: ${({ theme }) => theme.colors.primary.main};
-
-  box-shadow: 0px 0px 20px 0px ${({ theme }) => theme.colors.primary.main};
-  box-shadow: 0px 0px 20px -10px black;
-  /* background: ${({ theme }) =>
-    `linear-gradient(45deg, ${theme.colors.primary.main}, ${theme.colors.primary.light})`}; */
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  svg {
-    width: 1.5rem;
-    height: 1.5rem;
-
-    path {
-      fill: ${({ theme }) => theme.colors.onPrimary.main};
     }
   }
 `;
@@ -305,7 +289,7 @@ const pageVariants = {
 
 const tapAnimation = {
   whileTap: {
-    scale: 0.9,
+    scale: 0.85,
   },
 };
 
@@ -322,12 +306,18 @@ const pageAnimation = {
 
 const hideResultsAnimation = {
   variants: {
-    show: { opacity: 1, height: "auto", transition: { delay: 0.2 } },
+    show: {
+      opacity: 1,
+      height: "auto",
+      transition: { delay: 0.2, duration: 0.25 },
+    },
     hide: {
       opacity: 0,
       height: "0",
+      transition: { duration: 0.25 },
     },
   },
+
   initial: "hide",
   animate: "show",
   exit: "hide",
@@ -351,8 +341,6 @@ const navButtonAnimation = {
   exit: "hide",
   ...tapAnimation,
 };
-
-// cons;
 
 export const sanitizeGenes = (dirtyGenes: any) => {
   const cleanGenes: GeneSkill[] = [];
@@ -459,8 +447,13 @@ const GeneSearch = ({
   });
 
   // DERIVED ATTRIBUTES:
-  // const searchBarHeight = 3 * 14;
-  // const componentHeight = rows * resultItemSize.h + verticalPadding * 2;
+
+  // const componentHeight =
+  //   rows * itemSize +
+  //   rows * itemPadding * 2 +
+  //   itemPadding * 2 +
+  //   14 * 2 +
+  //   14 / 2;
   const componentHeight =
     rows * itemSize +
     rows * itemPadding * 2 +
@@ -473,9 +466,18 @@ const GeneSearch = ({
   // ANIMATION PROPS:
   const fabProps = {
     variants: {
-      normal: { scale: 1, backgroundColor: theme.colors.primary.main },
-      shrink: { scale: 0.75, backgroundColor: theme.colors.error.light },
+      normal: {
+        scale: 1,
+
+        backgroundColor: "#222222",
+      },
+      shrink: {
+        scale: 0.75,
+        backgroundColor: theme.colors.danger.main,
+        // transition: { delay: 0.5 },
+      },
     },
+    whileTap: { scale: 0.75 },
     initial: "normal",
     animate: showSearch ? "shrink" : "normal",
   };
@@ -558,6 +560,7 @@ const GeneSearch = ({
   const GeneItem = (gene: GeneSkill) => (
     <GeneContainer key={gene.gId} padding={itemPadding}>
       <DraggableGene
+        key={gene.gId}
         size={itemSize}
         gene={gene}
         onDragStart={() => {
@@ -589,12 +592,13 @@ const GeneSearch = ({
 
   return (
     <>
+      {/* <Debug data={{ resultsPerPage }} drag /> */}
       <DummyWidthMeasurementDiv ref={dummyParentContainerRef} />
       <FAB type="button" {...fabProps} onClick={toggleSearch}>
         {showSearch ? <MdClose /> : <MdAdd />}
       </FAB>
       <AnimatePresence>
-        {showSearch && (
+        {/* {showSearch && (
           <Controls>
             <LB key="prev" onClick={prev} {...navButtonAnimation} custom={1}>
               <MdKeyboardArrowLeft />
@@ -602,11 +606,8 @@ const GeneSearch = ({
             <LB key="next" onClick={next} {...navButtonAnimation} custom={0}>
               <MdKeyboardArrowRight />
             </LB>
-            {/* <LB onClick={next} size={16}>
-              <ImHeart />
-            </LB> */}
           </Controls>
-        )}
+        )} */}
         {showSearch && (
           <ExpandSearchMenu
             key="gene-search"
@@ -624,20 +625,10 @@ const GeneSearch = ({
             {...hideResultsAnimation}
             padding={itemPadding}
             key="results-container"
-            height={componentHeight}
+            // height={componentHeight}
             dragging={browseMode || !showSearch}
             // ref={resultContainerRef}
           >
-            <ResultInfo>
-              <PageInfo>
-                <span>Results</span>
-                {searchResults.length}
-              </PageInfo>
-              <PageInfo>
-                <span>Page</span>
-                {`${page.number + 1} of ${totalPages}`}
-              </PageInfo>
-            </ResultInfo>
             <Results
               {...pageAnimation}
               className="results"
@@ -666,6 +657,38 @@ const GeneSearch = ({
                 )
               )}
             </Results>
+            <ResultInfo>
+              <PageInfo>
+                <span>Results</span>
+                {searchResults.length}
+              </PageInfo>
+              <PageInfo>
+                <span>Page</span>
+                {`${page.number + 1} of ${totalPages}`}
+              </PageInfo>
+
+              {/* <Controls> */}
+              <LB
+                key="prev"
+                onClick={prev}
+                {...tapAnimation}
+
+                // {...navButtonAnimation}
+                // custom={1}
+              >
+                <MdKeyboardArrowLeft />
+              </LB>
+              <LB
+                key="next"
+                onClick={next}
+                {...tapAnimation}
+                // {...navButtonAnimation}
+                // custom={0}
+              >
+                <MdKeyboardArrowRight />
+              </LB>
+              {/* </Controls> */}
+            </ResultInfo>
           </Container>
         )}
       </AnimatePresence>

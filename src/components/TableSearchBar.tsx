@@ -1,5 +1,6 @@
 import { Theme, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
+import { rgba } from "emotion-rgba";
 import { motion, AnimatePresence } from "framer-motion";
 import { MouseEventHandler, useEffect, useRef, useState } from "react";
 
@@ -20,9 +21,12 @@ const SBContainer = styled(motion.div)<SBProps>`
 
   z-index: 100;
   width: 100%;
-  height: 3rem;
-  min-height: 3rem;
-  max-height: 3rem;
+  height: 4rem;
+  min-height: 4rem;
+  max-height: 4rem;
+
+  box-shadow: 0px 0px 20px -13px black;
+
   /* position: sticky; */
   /* top: 0; */
   /* left: 0; */
@@ -34,11 +38,14 @@ const SBContainer = styled(motion.div)<SBProps>`
 
   border-radius: 5rem;
 
-  background-color: ${({ theme }) => theme.colors.surface.main};
+  /* background-color: ${({ theme }) => theme.colors.surface.main}; */
+  background-color: ${({ theme }) =>
+    rgba(theme.colors.background.darker, 0.94)};
+  backdrop-filter: blur(2px);
 
-  border: 1px solid
+  /* border: 1px solid
     ${({ showAlert, theme }) =>
-      showAlert ? theme.colors.primary.main : theme.colors.surface.main};
+    showAlert ? theme.colors.primary.main : theme.colors.surface.main}; */
 
   /* box-shadow: 0px 0px 0px 1px ${({ theme }) =>
     theme.colors.onSurface.main}; */
@@ -78,7 +85,7 @@ const SBContainer = styled(motion.div)<SBProps>`
   }
 
   p {
-    color: ${({ theme }) => theme.colors.error.light};
+    color: ${({ theme }) => theme.colors.danger.main};
     white-space: nowrap;
     font-weight: 600;
     font-size: 0.9rem;
@@ -267,8 +274,8 @@ const SearchBar = ({
     variants: {
       alert: {
         // border: `1px solid ${theme.colors.primary.main}`,
-        boxShadow: `inset 0px 0px 0px 3px ${theme.colors.correct.main}`,
-        // outline: `5px solid ${theme.colors.correct.main}`,
+        boxShadow: `inset 0px 0px 0px 3px ${theme.colors.success.main}`,
+        // outline: `5px solid ${theme.colors.success.main}`,
         transition: {
           // repeatType: "mirror",
 
@@ -279,8 +286,8 @@ const SearchBar = ({
       none: {
         // border: `1px solid ${theme.colors.primary.main}`,
 
-        // outline: `0px solid ${theme.colors.correct.main}`,
-        boxShadow: `inset 0px 0px 0px 0px ${theme.colors.correct.main}`,
+        // outline: `0px solid ${theme.colors.success.main}`,
+        boxShadow: `inset 0px 0px 0px 0px ${theme.colors.success.main}`,
       },
     },
     initial: "none",

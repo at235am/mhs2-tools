@@ -8,6 +8,7 @@ import { MdCheck, MdContentCopy } from "react-icons/md";
 import { ImCheckmark } from "react-icons/im";
 import BPHTemplate from "./BuildPageHeaderTemplate";
 import Tooltip from "../Tooltip";
+import { useAuth } from "../../contexts/AuthContext";
 
 const ColumnGroup = styled.div`
   flex: 1;
@@ -172,6 +173,7 @@ type Props = { link: string };
 const ShareLink = ({ link }: Props) => {
   const linkRef = useRef<HTMLInputElement>(null);
   const [show, setShow] = useState(false);
+  const { user } = useAuth();
   // const [text, setText] = useState("");
 
   const copyToClipboard = () => {
@@ -188,19 +190,20 @@ const ShareLink = ({ link }: Props) => {
       console.error(e);
     }
   };
+
   return (
     <BPHTemplate
       titleLabel={
         <>
           Share Link{" "}
-          {
+          {!user && (
             <Tooltip
               text={`You are not logged in so this link changes whenever you make a change to the build. Your build insights will also not be shared.`}
               label="Share Link Warning"
               iconSize={18}
-              textBubbleWidth={300}
+              textBubbleWidth={220}
             />
-          }
+          )}
         </>
       }
     >

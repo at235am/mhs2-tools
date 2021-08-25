@@ -47,14 +47,14 @@ const TextAreaContainer = styled.textarea`
 
   border-radius: 5px;
   border-radius: 1rem;
+  border-radius: 5px 3rem 3rem 3rem;
 
-  background-color: ${({ theme }) => theme.colors.surface.main};
-  /* background-color: transparent; */
+  background-color: ${({ theme }) => theme.colors.surface.lighter};
 
   font-size: 1rem;
   letter-spacing: 1px;
 
-  border: 1px solid ${({ theme }) => theme.colors.surface.darker};
+  /* border: 1px solid ${({ theme }) => theme.colors.surface.darker}; */
 
   /* border-top-left-radius: 0; */
   /* border: 2px solid ${({ theme }) => theme.colors.surface.darker}; */
@@ -87,9 +87,6 @@ const DummyMeasurementTA = styled(TextAreaContainer)`
   top: 0;
   left: 0;
   opacity: 0;
-
-  background-color: red;
-  color: blue;
 `;
 
 const CharCounter = styled.div`
@@ -97,7 +94,7 @@ const CharCounter = styled.div`
 
   position: absolute;
   bottom: 0;
-  right: 0;
+  right: 1rem;
   letter-spacing: 1px;
 
   margin: 1rem;

@@ -54,9 +54,14 @@ declare module "@emotion/react" {
       onBackground: Color;
       onSurface: Color;
 
-      error: Color;
-      correct: Color;
-      warning: Color;
+      // error: Color;
+      // correct: Color;
+      // warning: Color;
+
+      info: Color;
+      success: Color;
+      caution: Color;
+      danger: Color;
     };
   }
 }

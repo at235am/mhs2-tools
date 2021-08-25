@@ -24,7 +24,7 @@ const BuildNameInput = styled(TextInput)`
   -webkit-text-fill-color: transparent; */
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.error.dark};
+    color: ${({ theme }) => theme.colors.danger.dark};
     text-align: center;
     opacity: 1;
   }

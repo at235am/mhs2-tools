@@ -111,8 +111,8 @@ const SortIndicator = styled(motion.span)<{ orderType: string }>`
     path {
       transition: 100ms fill linear;
       fill: ${({ orderType, theme }) => {
-        if (orderType === "ascend") return theme.colors.correct.main;
-        else if (orderType === "descend") return theme.colors.error.main;
+        if (orderType === "ascend") return theme.colors.success.main;
+        else if (orderType === "descend") return theme.colors.danger.main;
         else return rgba(theme.colors.onBackground.main, 0.2);
       }};
     }
@@ -130,7 +130,7 @@ const HoverIndicator = styled(motion.span)`
   height: 1rem;
   /* border-radius: 0 50% 50% 0; */
   margin-left: 0.5rem;
-  background-color: ${({ theme }) => theme.colors.error.light};
+  background-color: ${({ theme }) => theme.colors.danger.main};
 `;
 const LevelBox = styled(SortBox)`
   bottom: 4.5rem;

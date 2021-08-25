@@ -13,6 +13,7 @@ import Asset from "./AssetComponents";
 // icons:
 import { BsExclamationCircleFill } from "react-icons/bs";
 import Alert from "./Alert";
+import Dialog from "./Dialog";
 
 const Container = styled.div<{ squareHeight: number }>`
   width: 100%;
@@ -175,7 +176,7 @@ const TR = styled.tr<{ highlight: boolean }>`
       ? css`
           td:nth-of-type(3),
           td:nth-of-type(4) {
-            color: ${theme.colors.correct.main};
+            color: ${theme.colors.success.main};
             font-weight: 700;
           }
         `
@@ -187,15 +188,27 @@ const TD = styled.td`
   display: flex;
 `;
 
-const NoBingoerror = styled.div`
-  width: 100%;
-  height: 100%;
+// const NoBingoerror = styled.div`
+//   width: 100%;
+//   height: 100%;
 
-  display: inline-flex;
+//   display: inline-flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+//   gap: 0.5rem;
+// `;
+
+const EmptyListContainer = styled.div`
+  height: 100%;
+  width: 100%;
+
+  padding: 1rem;
+
+  display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 `;
 
 const H = styled.h3`
@@ -204,10 +217,10 @@ const H = styled.h3`
   text-transform: capitalize;
   text-transform: uppercase;
   white-space: nowrap;
-  color: ${({ theme }) => theme.colors.error.dark};
+  color: ${({ theme }) => theme.colors.danger.dark};
   color: rgba(0, 0, 0, 1);
 
-  /* color: ${({ theme }) => theme.colors.error.main}; */
+  /* color: ${({ theme }) => theme.colors.danger.main}; */
 
   font-style: normal;
 
@@ -222,8 +235,8 @@ const P = styled.p`
   /* margin: 0 3rem; */
   /* padding: 1rem; */
 
-  color: ${({ theme }) => theme.colors.error.dark};
-  color: ${({ theme }) => theme.colors.error.main};
+  color: ${({ theme }) => theme.colors.danger.dark};
+  color: ${({ theme }) => theme.colors.danger.main};
   color: rgba(0, 0, 0, 1);
 
   font-style: italic;
@@ -255,32 +268,9 @@ const Icon = styled.span`
     path {
       /* fill: ${({ theme }) => theme.colors.surface.dark}; */
       fill: black;
-      /* fill: ${({ theme }) => theme.colors.error.main}; */
+      /* fill: ${({ theme }) => theme.colors.danger.main}; */
     }
   }
-`;
-
-const Dialog = styled.div`
-  width: 100%;
-  max-width: 18rem;
-
-  border-radius: 5px;
-
-  padding: 1rem;
-  padding-left: 0;
-
-  /* border: 1px solid ${({ theme }) => theme.colors.error.dark}; */
-  /* border: 1px solid ${({ theme }) => theme.colors.error.main}; */
-
-  /* background-color: ${({ theme }) =>
-    rgba(theme.colors.error.darker, 0.1)}; */
-
-  border-bottom: 3px solid #ffb907;
-  background-color: ${({ theme }) => theme.colors.warning.darker};
-
-  background-color: #ffcd4a;
-
-  display: flex;
 `;
 
 type BingoBonusesProps = {
@@ -348,7 +338,7 @@ const BingoBonuses = ({
           </Tbody>
         </Table>
       ) : (
-        <NoBingoerror>
+        <EmptyListContainer>
           {/* <Dialog>
             <Icon>
               <BsExclamationCircleFill />
@@ -360,8 +350,17 @@ const BingoBonuses = ({
             </P>
           </Dialog> */}
 
-          <Alert />
-        </NoBingoerror>
+          <Dialog
+            type="caution"
+            title="no bonuses"
+            text="Try lining up three elements or types!"
+          />
+          <Dialog
+            type="info"
+            title="hint"
+            text="You can line things up by rows, columns, or diagnols."
+          />
+        </EmptyListContainer>
       )}
     </Container>
   );

@@ -34,7 +34,7 @@ const Container = styled(motion.p)`
 
   padding: 0.25rem 1rem;
 
-  background-color: ${({ theme }) => theme.colors.error.dark};
+  background-color: ${({ theme }) => theme.colors.danger.dark};
 `;
 
 type FlashTooltipProps = {

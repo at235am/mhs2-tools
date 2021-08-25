@@ -277,7 +277,7 @@ const ExitButton = styled.button`
   &:hover {
     svg {
       path {
-        fill: ${({ theme }) => theme.colors.error.dark};
+        fill: ${({ theme }) => theme.colors.danger.dark};
       }
     }
   }

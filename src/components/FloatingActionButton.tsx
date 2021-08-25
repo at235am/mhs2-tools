@@ -4,7 +4,18 @@ import styled from "@emotion/styled";
 import { motion } from "framer-motion";
 import { ReactElement } from "react";
 
+const sizeStyles = (props: any) => css`
+  width: ${props.size}rem;
+  min-width: ${props.size}rem;
+  max-width: ${props.size}rem;
+  height: ${props.size}rem;
+  min-height: ${props.size}rem;
+  max-height: ${props.size}rem;
+`;
+
 export const Container = styled(motion.button)<{ size: number }>`
+  position: relative;
+
   z-index: 15;
 
   border-radius: 50%;
@@ -19,6 +30,7 @@ export const Container = styled(motion.button)<{ size: number }>`
   `}
 
   background-color: ${({ theme }) => theme.colors.primary.main};
+  background-color: ${({ theme }) => theme.colors.background.darker};
 
   /* box-shadow: 0px 0px 20px -10px ${({ theme }) =>
     theme.colors.primary.main}; */
@@ -38,6 +50,16 @@ export const Container = styled(motion.button)<{ size: number }>`
       fill: ${({ theme }) => theme.colors.onPrimary.main};
     }
   }
+`;
+
+const ColorCircle = styled.div`
+  position: absolute;
+  top: 3px;
+  left: 0;
+
+  background-color: red;
+
+  ${sizeStyles(20)}
 `;
 
 const REM_SIZE = {
@@ -73,6 +95,7 @@ const FloatingActionButton = ({
       // className={className}
       {...props}
     >
+      <ColorCircle />
       {children}
     </Container>
   );

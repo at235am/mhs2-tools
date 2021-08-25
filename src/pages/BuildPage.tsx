@@ -259,7 +259,6 @@ const BuildPage = ({ match }: PageProps) => {
   });
 
   const [loading, setLoading] = useState(true);
-  const [showForkModal, setShowForkModal] = useState(false);
 
   const [dropSuccess, setDropSuccess] = useState(false);
   const { drop, setDrop } = useDrop();
@@ -324,7 +323,7 @@ const BuildPage = ({ match }: PageProps) => {
 
     await save({
       buildId: newId, // give the forked build a new id
-      buildName: `[fork] ${buildName}`, // add forked to the beginning
+      buildName: `[COPY] ${buildName}`, // add forked to the beginning
       monstie, // keep current monstie
       geneBuild, // keep current gene configuration
       createdBy: user ? user.id : null, // get id of requesting user
@@ -442,7 +441,6 @@ const BuildPage = ({ match }: PageProps) => {
     ///////////////////////////////// LOCAL BUILD /////////////////////////////////
     else if (buildMetaData.buildType === "local") {
       const localBuild = findLocalBuild(buildId);
-      console.log("local build", localBuild);
       setBuildName(localBuild?.buildName || "");
       setMonstie(localBuild?.monstie || 33);
       setBuildDescription(localBuild?.insights || "");
@@ -500,16 +498,13 @@ const BuildPage = ({ match }: PageProps) => {
     <>
       <Gutter>
         <Container ref={containerRef}>
-          {!buildMetaData.isCreator && buildMetaData.buildType !== "invalid" && (
-            <BuildPageNotification
-              metaInfo={buildMetaData}
-              editButtonAction={() => {
-                console.log("yes");
-                forkBuild();
-              }}
-            />
-          )}
-          {showForkModal && <div>FORK</div>}
+          {!buildMetaData.isCreator &&
+            buildMetaData.buildType !== "invalid" && (
+              <BuildPageNotification
+                metaInfo={buildMetaData}
+                editButtonAction={forkBuild}
+              />
+            )}
 
           {loading && <div>loading</div>}
 

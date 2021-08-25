@@ -50,7 +50,7 @@ const TextBubble = styled.span<{ width: number | undefined }>`
   width: ${({ width }) => (width ? `${width}px` : "auto")};
   max-width: 100vw;
 
-  background-color: black;
+  background-color: #222222;
   color: white;
   font-weight: 600;
 

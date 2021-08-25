@@ -187,7 +187,7 @@ const MonstieList = ({ data, column, lvl, setLvl }: MonstieListProps) => {
   const staticProps = {
     variants: {
       normal: { scale: 1, backgroundColor: theme.colors.primary.main },
-      shrink: { scale: 0.75, backgroundColor: theme.colors.error.light },
+      shrink: { scale: 0.75, backgroundColor: theme.colors.danger.light },
     },
     initial: "normal",
     animate: showSearch ? "shrink" : "normal",
@@ -196,7 +196,7 @@ const MonstieList = ({ data, column, lvl, setLvl }: MonstieListProps) => {
   const staticProps2 = {
     variants: {
       normal: { x: "0rem", backgroundColor: theme.colors.primary.main },
-      move: { x: "-0.5rem", backgroundColor: theme.colors.error.light },
+      move: { x: "-0.5rem", backgroundColor: theme.colors.danger.light },
     },
     initial: "normal",
     animate: showSort ? "move" : "normal",

@@ -65,25 +65,11 @@ export const darkTheme: Theme = {
   font: baseFont,
   breakpoints: bp,
   colors: {
-    // primary: ccs({ main: "#49d0b0" }),
-    // primary: ccs({ main: "#2de9b7" }),
     primary: ccs({ main: "#49d0b0", darker: "#007258" }),
     secondary: ccs({ main: "#2dc3e9" }),
 
-    background: ccs({ main: "#2e3035" }),
-    surface: ccs({ main: "#36383e" }),
-
-    // background: ccs({ main: "#1f1f1f" }),
-    // surface: ccs({ main: "#181818" }),
-
-    // background: ccs({ main: "#36383e" }),
-    // surface: ccs({ main: "#2e3035" }),
-
-    // background: ccs({ main: "#2c333b" }),
-    // surface: ccs({ main: "#363f49" }),
-
-    // background: ccs({ main: "#363f49" }),
-    // surface: ccs({ main: "#2c333b" }),
+    background: ccs({ main: "#2e3035", darker: "#222222" }),
+    surface: ccs({ main: "#36383e", darker: "#222222" }),
 
     onPrimary: ccs({ main: "#ffffff" }),
     onSecondary: ccs({ main: "#ffffff" }),
@@ -91,12 +77,11 @@ export const darkTheme: Theme = {
     onBackground: ccs({ main: "#ffffff" }),
     onSurface: ccs({ main: "#ffffff" }),
 
-    // error: ccs({ main: "#ff6b6b" }),
-    // error: ccs({ main: "#ff6b6b", light: "#fd3131" }),
-    error: ccs({ main: "#ff5b5b", light: "#fd5050" }),
-
-    correct: ccs({ main: "#37d7b2" }),
-    warning: ccs({ main: "#fee257" }),
+    info: ccs({ main: "#51acfe" }),
+    success: ccs({ main: "#37d7b2" }),
+    // caution: ccs({ main: "#fee257" }),
+    caution: ccs({ main: "#ffcd4a" }),
+    danger: ccs({ main: "#fb494a" }),
   },
 };
 
@@ -106,42 +91,23 @@ export const lightTheme: Theme = {
   font: baseFont,
   breakpoints: bp,
   colors: {
-    // primary: ccs({ main: "#49d0b0", light: "#bbf3fb" }),
-    // primary: ccs({ main: "#2de9b7", light: "#bbf3fb" }),
     primary: ccs({ main: "#49d0b0", light: "#bbf3fb", darker: "#007258" }),
     secondary: ccs({ main: "#6c63ff" }),
 
-    // background: ccs({ main: "#f6f8fc", dark: "#e9eef8", darker: "#f6f6f6" }),
     background: ccs({ main: "#f2f2f2", dark: "#e9eef8", darker: "#f6f6f6" }),
-    // background: ccs({ main: "#f6f6f6", light: "#f6f8fc", dark: "#e9eef8" }),
-    surface: ccs({ main: "#ffffff", lighter: "#e6e6e7" }),
+    surface: ccs({ main: "#ffffff", lighter: "#e6e6e7", darker: "#ffffff" }),
 
     onPrimary: ccs({ main: "#ffffff" }),
     onSecondary: ccs({ main: "#000000" }),
 
     onBackground: ccs({ main: "#2d4665" }),
-    onSurface: ccs({ main: "#09090a" }),
+    // onSurface: ccs({ main: "#09090a" }),
+    onSurface: ccs({ main: "#222222" }),
 
-    error: ccs({ main: "#fd3131", light: "#ff5b5b" }),
-
-    correct: ccs({ main: "#37d7b2" }),
-    warning: ccs({ main: "#fee257" }),
-    // primary: ccs({ main: "#43dbab" }),
-    // secondary: ccs({ main: "#6c63ff" }),
-
-    // background: ccs({ main: "#edf0f5", light: "#f5f5f5" }),
-    // surface: ccs({ main: "#ffffff" }),
-
-    // onPrimary: ccs({ main: "#ffffff" }),
-    // onSecondary: ccs({ main: "#000000" }),
-
-    // onBackground: ccs({ main: "#363f49" }),
-    // onSurface: ccs({ main: "#2c333b" }),
-
-    // error: ccs({ main: "#fd3131", light: "#ff5b5b" }),
-
-    // correct: ccs({ main: "#37d7b2" }),
-    // warning: ccs({ main: "#fee257" }),
+    info: ccs({ main: "#217aff" }),
+    success: ccs({ main: "#37d7b2" }),
+    caution: ccs({ main: "#fee257" }),
+    danger: ccs({ main: "#ff3939", light: "#fd5050" }),
   },
 };
 
