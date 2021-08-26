@@ -16,6 +16,9 @@ export const popOutMenuBaseStyles = (props: any) => css`
   bottom: 0;
   right: 0;
 
+  background-color: ${rgba(props.theme.colors.surface.darker, 0.94)};
+  backdrop-filter: blur(2px);
+
   /* border: 1px dashed red; */
 
   /* opacity: 0.94; */
@@ -23,7 +26,7 @@ export const popOutMenuBaseStyles = (props: any) => css`
 
   /* background-color: ${props.theme.colors.surface.main}; */
   /* background-color: ${props.theme.colors.background.darker}; */
-  background-color: transparent;
+  /* background-color: transparent; */
   /* box-shadow: 0px 0px 20px -13px black; */
 
   border-radius: 5rem;

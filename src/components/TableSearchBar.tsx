@@ -39,9 +39,8 @@ const SBContainer = styled(motion.div)<SBProps>`
   border-radius: 5rem;
 
   /* background-color: ${({ theme }) => theme.colors.surface.main}; */
-  background-color: ${({ theme }) =>
-    rgba(theme.colors.background.darker, 0.94)};
-  backdrop-filter: blur(2px);
+
+  background-color: transparent;
 
   /* border: 1px solid
     ${({ showAlert, theme }) =>

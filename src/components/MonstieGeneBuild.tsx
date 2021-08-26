@@ -7,7 +7,7 @@ import { encodeGeneBuildToBase64Url } from "../utils/utils";
 import { MdShare } from "react-icons/md";
 import { useAuth } from "../contexts/AuthContext";
 
-const Container = styled.div`
+const Container = styled.li`
   position: relative;
 
   /* padding: 1rem; */
@@ -24,7 +24,7 @@ const P = styled.span`
 `;
 
 const CardLink = styled(Link)`
-  border: 1px dashed;
+  /* border: 1px dashed; */
 
   position: absolute;
 
@@ -40,7 +40,7 @@ const ButtonContainer = styled.div`
   width: 100%;
 
   display: flex;
-  border: 1px dashed;
+  /* border: 1px dashed; */
 `;
 
 const ShareButton = styled.button`
@@ -105,7 +105,6 @@ const MonstieGeneBuild = ({ build }: MonstieGeneBuildProps) => {
         >
           <MdShare />
         </ShareButton>
-        <EditLinkButton to={`/builds/${url}`}>Edit</EditLinkButton>
       </ButtonContainer>
     </Container>
   );

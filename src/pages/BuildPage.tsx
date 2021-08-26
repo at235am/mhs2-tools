@@ -225,10 +225,11 @@ export type BuildMetaInfo = {
 };
 
 const BuildPage = ({ match }: PageProps) => {
-  const { user } = useAuth();
   // STATE:
+  const { user } = useAuth();
   const [columns, setColumns] = useState(3);
   const history = useHistory();
+  const bingoboardSectionRef = useRef<HTMLSelectElement>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const headerContainerRef = useRef<HTMLDivElement>(null);
@@ -275,6 +276,16 @@ const BuildPage = ({ match }: PageProps) => {
     createdBy: user ? user.id : null,
     insights: buildDescription,
   });
+
+  const scrollBingoboardIntoView = () => {
+    if (bingoboardSectionRef.current) {
+      const top = bingoboardSectionRef.current.getBoundingClientRect().top;
+      const yOffset = isMobile ? -14 * 2.5 : -14 * 6;
+      const y = top + window.pageYOffset + yOffset;
+
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
 
   const shuffle = () => setGeneBuild((list) => shuffleArray([...list]));
   const clearBuild = () => setGeneBuild(CLEAN_EMPTY_BOARD);
@@ -532,7 +543,7 @@ const BuildPage = ({ match }: PageProps) => {
               </HeaderContainer>
 
               <BodyContainer columns={columns}>
-                <BoardSection>
+                <BoardSection ref={bingoboardSectionRef}>
                   <SubHeading>Bingoboard</SubHeading>
 
                   <BingoBoard
@@ -592,6 +603,7 @@ const BuildPage = ({ match }: PageProps) => {
                   bottom={floatPointOffset}
                 >
                   <GeneSearch
+                    scrollIntoView={scrollBingoboardIntoView}
                     setDrop={setDrop}
                     setDropSuccess={setDropSuccess}
                     dropSuccess={dropSuccess}

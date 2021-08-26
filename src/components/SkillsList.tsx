@@ -69,12 +69,12 @@ const SkillsList = ({ className, geneBuild }: SkilsListProps) => {
           <Dialog
             type="info"
             title="hint 1"
-            text="You can add a gene by clicking on the (+) button on the bottom right"
+            text="You can add a gene by clicking on the (+) button on the bottom right."
           />
           <Dialog
             type="info"
             title="hint 2"
-            text="Click, hold, and drag the gene to the bingoboard"
+            text="Click, hold, and drag a gene to the bingoboard."
           />
           <Dialog
             type="info"

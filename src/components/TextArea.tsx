@@ -66,8 +66,9 @@ const TextAreaContainer = styled.textarea`
     theme.colors.surface.darker}; */
 
   &::placeholder {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: normal;
+    letter-spacing: 0;
 
     font-style: italic;
     color: ${({ theme }) => theme.colors.onSurface.main};

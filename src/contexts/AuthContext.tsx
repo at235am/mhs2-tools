@@ -41,17 +41,31 @@ type AuthProviderProps = {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(auth.user());
 
-  // const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    // console.log(auth.user());
+    window.addEventListener("storage", async () => {
+      const token = localStorage.getItem("supabase.auth.token");
+
+      if (token) {
+        try {
+          const session = JSON.parse(token);
+          const refreshToken = session.currentSession.refresh_token;
+          const currentSession = auth.session();
+          if (!currentSession) auth.setSession(refreshToken);
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        auth.signOut();
+      }
+    });
+
     const state = auth.onAuthStateChange((event, session) => {
-      // console.log("e", event);
-      // console.log("session", session);
       setUser(session ? session.user : null);
     });
 
-    return state.data?.unsubscribe;
+    return () => {
+      state.data?.unsubscribe();
+    };
   }, []);
 
   // const user = auth.user();

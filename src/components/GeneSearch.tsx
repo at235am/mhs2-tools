@@ -41,6 +41,7 @@ import Fuse from "fuse.js";
 import { isNullishCoalesce } from "typescript";
 import { cleanGeneBuild } from "../utils/utils";
 import { rgba } from "emotion-rgba";
+import { useHistory } from "react-router-dom";
 
 const DummyWidthMeasurementDiv = styled.div`
   width: 100%;
@@ -400,6 +401,7 @@ type GeneSearchProps = {
   rows?: number;
   itemSize?: number;
   itemPadding?: number;
+  scrollIntoView: () => void;
 };
 
 const GeneSearch = ({
@@ -409,7 +411,9 @@ const GeneSearch = ({
   rows = 2,
   itemSize = 85,
   itemPadding = 7,
+  scrollIntoView,
 }: GeneSearchProps) => {
+  const history = useHistory();
   const theme = useTheme();
   const [genes, setGenes] = useState<GeneSkill[]>([]);
   const [searchResults, setSearchResults] = useState<GeneSkill[]>([]);
@@ -522,11 +526,6 @@ const GeneSearch = ({
     };
 
     fetchAllGeneSkills();
-
-    // const dataFromApiCall = GENES_DATA;
-    // const cleanGenes = sanitizeGenes(dataFromApiCall);
-    // setGenes(cleanGenes);
-    // setSearchResults(cleanGenes.slice(0, 20));
   }, []);
 
   // recalculate pagination parameters:
@@ -594,20 +593,17 @@ const GeneSearch = ({
     <>
       {/* <Debug data={{ resultsPerPage }} drag /> */}
       <DummyWidthMeasurementDiv ref={dummyParentContainerRef} />
-      <FAB type="button" {...fabProps} onClick={toggleSearch}>
+      <FAB
+        type="button"
+        {...fabProps}
+        onClick={() => {
+          toggleSearch();
+          if (!showSearch) scrollIntoView();
+        }}
+      >
         {showSearch ? <MdClose /> : <MdAdd />}
       </FAB>
       <AnimatePresence>
-        {/* {showSearch && (
-          <Controls>
-            <LB key="prev" onClick={prev} {...navButtonAnimation} custom={1}>
-              <MdKeyboardArrowLeft />
-            </LB>
-            <LB key="next" onClick={next} {...navButtonAnimation} custom={0}>
-              <MdKeyboardArrowRight />
-            </LB>
-          </Controls>
-        )} */}
         {showSearch && (
           <ExpandSearchMenu
             key="gene-search"
@@ -668,23 +664,10 @@ const GeneSearch = ({
               </PageInfo>
 
               {/* <Controls> */}
-              <LB
-                key="prev"
-                onClick={prev}
-                {...tapAnimation}
-
-                // {...navButtonAnimation}
-                // custom={1}
-              >
+              <LB key="prev" onClick={prev} {...tapAnimation}>
                 <MdKeyboardArrowLeft />
               </LB>
-              <LB
-                key="next"
-                onClick={next}
-                {...tapAnimation}
-                // {...navButtonAnimation}
-                // custom={0}
-              >
+              <LB key="next" onClick={next} {...tapAnimation}>
                 <MdKeyboardArrowRight />
               </LB>
               {/* </Controls> */}

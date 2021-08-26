@@ -28,9 +28,10 @@ const SortBox = styled(motion.div)`
   padding-top: 0;
 
   bottom: 4.5rem;
-  border-radius: 1rem 1rem 2rem 1rem;
   border-radius: 2rem 2rem 2rem 2rem;
   box-shadow: 0px 0px 10px -2px rgba(0, 0, 0, 0.2);
+
+  /* background-color: ${({ theme }) => theme.colors.surface.darker}; */
 
   justify-content: flex-start;
 
@@ -49,7 +50,8 @@ const SortBoxHeader = styled.h5`
   position: sticky;
   top: 0;
 
-  background-color: ${({ theme }) => theme.colors.surface.main};
+  /* background-color: ${({ theme }) => theme.colors.surface.main}; */
+  background-color: inherit;
 
   padding: 1rem 0 0.5rem 0;
 
@@ -118,41 +120,8 @@ const SortIndicator = styled(motion.span)<{ orderType: string }>`
     }
   }
 `;
-const HoverIndicator = styled(motion.span)`
-  position: absolute;
 
-  margin: auto 0;
-  top: calc(50% - (1rem / 2));
-
-  left: -20px;
-
-  width: 2px;
-  height: 1rem;
-  /* border-radius: 0 50% 50% 0; */
-  margin-left: 0.5rem;
-  background-color: ${({ theme }) => theme.colors.danger.main};
-`;
-const LevelBox = styled(SortBox)`
-  bottom: 4.5rem;
-
-  right: 16rem;
-
-  /* padding: 1rem; */
-  width: 4rem;
-  height: 20rem;
-
-  border-radius: 1rem;
-  border-radius: 5rem;
-
-  padding: 1rem;
-
-  /* background-color: red; */
-
-  justify-content: space-evenly;
-  align-items: center;
-`;
-
-const fullOpacity = 0.94;
+const fullOpacity = 1;
 
 const sortAnimProps = {
   variants: {

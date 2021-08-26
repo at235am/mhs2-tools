@@ -16,7 +16,11 @@ const BuildNameInput = styled(TextInput)`
 
   text-align: center;
 
-  color: ${({ theme }) => theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.onSurface.main};
+  /* color: #fff; */
+  text-shadow: 3px 0 ${({ theme }) => theme.colors.surface.darker};
+
+  letter-spacing: 2px;
 
   /* background: ${rainbowTextGradient()};
   background-attachment: fixed;
@@ -25,6 +29,8 @@ const BuildNameInput = styled(TextInput)`
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.danger.dark};
+    text-shadow: none;
+
     text-align: center;
     opacity: 1;
   }

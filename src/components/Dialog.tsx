@@ -119,13 +119,7 @@ const Dialog = ({
   }
 
   return (
-    <Container
-      {...props}
-      bgColor={bgColor}
-      onClick={() => {
-        console.log({ mainColor, sat: color(mainColor).luminosity() });
-      }}
-    >
+    <Container {...props} bgColor={bgColor}>
       <IconSlot iconSize={iconSize} iconColor={iconColor} bgColor={bgColor}>
         <RiInformationFill />
       </IconSlot>

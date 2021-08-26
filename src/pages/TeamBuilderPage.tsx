@@ -37,7 +37,10 @@ import {
   geneBuildToSqlTableFormat,
   sanitizeGeneSkill,
 } from "../utils/db-transforms";
-import { saveUserBuild } from "../utils/db-inserts";
+import {
+  saveUserBuild,
+  syncDatabaseWithLocalStorage,
+} from "../utils/db-inserts";
 
 const Container = styled.div`
   /* border: 2px dashed green; */
@@ -108,10 +111,17 @@ const TeamBuilderPage = () => {
     history.push(`/builds/${newBuild.buildId}`);
   };
 
+  // useEffect(() => {
+  //   console.log("ue, start sync");
+  //   syncDatabaseWithLocalStorage(user);
+  // }, [user]);
+
   useEffect(() => {
     ////////////////////////// LOGGED IN USER ///////////////////////////
     if (user) {
       const fetchUserBuilds = async () => {
+        const success = await syncDatabaseWithLocalStorage(user);
+
         // fetch data:
         const { data, error } = await supabase
           .from("buildinfo")
@@ -157,7 +167,7 @@ const TeamBuilderPage = () => {
       const data = window.localStorage.getItem(GENE_BUILDS) || "";
       setBuilds(data ? JSON.parse(data) : []);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (!user) window.localStorage.setItem(GENE_BUILDS, JSON.stringify(builds));
@@ -185,7 +195,6 @@ const TeamBuilderPage = () => {
                 .eq("statline.lvl", 1);
               // .filter("statline.lvl", "eq", 1);
 
-              console.log(data);
               if (error) console.error(error);
             };
 
@@ -197,7 +206,6 @@ const TeamBuilderPage = () => {
                 .select("*, geneData:genes(*), monsters(*)")
                 .in("g_id", listOfGeneIds);
 
-              console.log(data);
               if (error) console.error(error);
             };
 

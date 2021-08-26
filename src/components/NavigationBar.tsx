@@ -24,6 +24,7 @@ import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
 import { GUTTER } from "./Gutter";
 import { useAuth } from "../contexts/AuthContext";
+import { auth } from "../utils/supabase";
 
 // background: ${({ theme }) =>
 //   `linear-gradient(45deg, ${theme.colors.primary.main}, ${theme.colors.primary.light})`};
